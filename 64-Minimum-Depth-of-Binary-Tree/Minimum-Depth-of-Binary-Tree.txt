@@ -1,0 +1,43 @@
+/* Minimum Depth of Binary Tree
+Given a binary tree, find its minimum depth.
+
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+
+key: use infinity to denote an empty node, 
+check l_depth == r_depth && l_depth == std::numeric_limits<int>::max() to determine a node without child, and return depth =1
+*/
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    /*int minDepth(TreeNode *root) {
+        return minDepth(root);
+    }*/
+    
+    int minDepth(TreeNode *node){
+        if(!node){
+            return 0;
+        }
+        
+        int l_depth = std::numeric_limits<int>::max();
+        if(node->left){
+            l_depth = minDepth(node->left);
+        }
+        int r_depth = std::numeric_limits<int>::max();
+        if(node->right){
+            r_depth = minDepth(node->right);
+        }
+        if(l_depth == r_depth && l_depth == std::numeric_limits<int>::max()){
+            return 1; //no children
+        }
+        return 1 + std::min(l_depth, r_depth);
+    }
+};

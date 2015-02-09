@@ -1,0 +1,99 @@
+/* Merge k Sorted Lists
+Merge k sorted linked lists and return it as one sorted list. Analyze and describe its complexity. 
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+ 
+class greaterListNode{
+public:
+   bool operator()(ListNode* a, ListNode* b) {
+        return a->val > b->val;
+   }
+ };
+ 
+class Solution {
+public:
+    ListNode *mergeKLists(vector<ListNode *> &lists) { //complexity O(nlogk)
+        if(!lists.size()){
+            return NULL;
+        }
+        priority_queue<int, std::vector<ListNode *>, greaterListNode> q;
+        
+        for(int i = 0; i < lists.size(); i++) {
+            if(lists[i]){
+                q.push(lists[i]); //keep the heads of lists int the queue
+            }
+        }
+        
+        ListNode *dHead = new ListNode(0);
+        ListNode *save = dHead;
+        while(q.size() > 0){
+            ListNode *node = q.top();
+            if(node){//inser to returning list
+                dHead->next = node;
+                dHead = dHead->next;
+            }
+            q.pop();        
+            if(node->next){//push new (node->next) in after a pop
+                node = node->next;
+                q.push(node);
+            }
+        }
+        dHead = save;
+        save = save->next;
+        delete dHead;
+        
+        return save;
+    }
+};
+
+
+class Solution {
+public:
+    ListNode *mergeKLists(vector<ListNode *> &lists) {//complexity O(kn)
+        if(!lists.size()){
+            return NULL;
+        }
+        ListNode *head = lists[0];
+        for(int i = 1; i < lists.size(); i++){
+            head = mergeTwoLists(head, lists[i]);
+        }
+        return head;
+    }
+    
+    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) { //complexity O(n)
+        ListNode *dHead = new ListNode(0);
+        ListNode *save = dHead;
+        while(l1 && l2){
+            if(l1->val < l2->val){
+                dHead->next = l1;
+                l1 = l1->next;
+                dHead = dHead->next;
+            }else{
+                dHead->next = l2;
+                l2 = l2->next;
+                dHead = dHead->next;
+            }
+        }
+        while(l1){
+            dHead->next = l1;
+            dHead = dHead->next;
+            l1 = l1->next;
+        }
+        while(l2){
+            dHead->next = l2;
+            dHead = dHead->next;
+            l2 = l2->next;
+        }
+        ListNode *res = save->next;
+        delete save;
+        return res;
+    }
+};

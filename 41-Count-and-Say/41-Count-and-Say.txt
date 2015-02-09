@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Solution {
+public:
+    string countAndSay(int n) {
+        string s("1");    
+        for(int i = 1; i < n; i++){
+            s = nextStr(s);
+        }
+        return s;
+    }
+    
+    string nextStr(const string &s){
+        string res("");
+    
+        int count = 1;
+        char c = s.c_str()[0];
+        for(int i = 1; i < s.size(); i++){
+             if(c == s.c_str()[i]){
+                 ++count;
+             }else{
+                 string count_s = std::to_string(count);
+                 char digit_buf[2] = {'\0', '\0'};
+                 digit_buf[0] = c;
+                 res += count_s + string(digit_buf);
+                 //after save old information, reset the variables
+                 c = s.c_str()[i];
+                 count = 1;                
+             }
+        }
+
+        string count_s = std::to_string(count);
+        char digit_buf[2] = {'\0', '\0'};
+        digit_buf[0] = c;
+        res += count_s + string(digit_buf);
+        
+        return res;
+    }
+};
+
+int main()
+{
+    Solution sol;
+    for(int i = 1; i <= 5; i++){
+        cout << sol.countAndSay(i) << endl;
+    }
+    return 0;
+}

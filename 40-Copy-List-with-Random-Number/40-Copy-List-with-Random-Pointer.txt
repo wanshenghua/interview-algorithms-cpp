@@ -1,0 +1,53 @@
+class Solution {
+public:
+    RandomListNode *copyRandomList(RandomListNode *head) {
+        RandomListNode *copy_head = copy(head);
+        fixRandomPointer(head);
+        extractList(head);
+        return copy_head;
+    }
+    
+    RandomListNode * copy(RandomListNode *head){
+        if(!head){ //key: check NULL list
+            return NULL;
+        }
+        
+        RandomListNode *node = head;
+        while(node){
+            RandomListNode *copy_node = new RandomListNode(node->label);
+            copy_node->next = node->next;
+            copy_node->random = node->random;
+            //insert after node
+            node->next = copy_node;
+            //move to next
+            node = copy_node->next;
+        }
+        return head->next;
+    }
+    
+    void fixRandomPointer(RandomListNode *head){
+        RandomListNode *node = head;
+        while(node){
+            RandomListNode *copy_node = node->next;
+            if(node->random){
+                copy_node->random = node->random->next;
+            }
+            node = copy_node->next;
+        }
+    }
+    
+    void extractList(RandomListNode *head){
+        RandomListNode *node = head;
+        while(node){
+            RandomListNode *copy_node = node->next;
+            RandomListNode *old_copy_node_next = copy_node->next;
+            if(old_copy_node_next){	//key: old_copy_node_next could be NULL, the list could end here.
+                copy_node->next = old_copy_node_next->next;
+            }else{
+                copy_node->next = NULL;
+            }
+            node->next = old_copy_node_next;
+            node = node->next;
+        }
+    }  
+};

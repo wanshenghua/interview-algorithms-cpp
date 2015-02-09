@@ -1,0 +1,35 @@
+/*  Letter Combinations of a Phone Number
+
+Given a digit string, return all possible letter combinations that the number could represent.
+
+A mapping of digit to letters (just like on the telephone buttons) is given below.
+
+Input:Digit string "23"
+Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+
+*/
+
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        const string s_array[] = {" ", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        vector<string> res;
+        string path("");
+        generateComb(res, s_array, digits, path, 0);
+        return res;
+    }
+    
+    void generateComb(vector<string> &res, const string keypad[], const string &digits, string &path, int depth){
+        if(depth == digits.size()){
+            res.push_back(path);
+            return;
+        }
+        char curDigit = digits[depth];
+        int offset = curDigit - '0';
+        for(int i = 0; i < keypad[offset].size(); i++){
+            path.push_back(keypad[offset][i]);
+            generateComb(res, keypad, digits, path, depth + 1);
+            path.pop_back();
+        }
+    }
+};
